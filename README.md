@@ -42,3 +42,20 @@ docker run --rm -it -v "${pwd}:/root/env" kascii-env
 # -v "<current_folder>:/root/env": mounts the current folter into the volume /root/env on the container
 # kascii-env: container name used on setup
 ```
+
+## Build
+
+`make build-x86_64`
+
+The gerenated iso will be located at `dist/x86_64/kernel.iso`
+
+## Running (QEMU)
+
+```sh
+# windows/linux/macos
+qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso
+
+# windows but qemu cannot find the pc bios (use powershell)
+.\scripts\windows\qemu-x86_64.ps1
+```
+
