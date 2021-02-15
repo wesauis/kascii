@@ -1,0 +1,14 @@
+# codepulse uses randomdude's image, but this one is more updated + is what randomdude's is based on
+FROM brett/gcc-cross-x86_64-elf
+
+# update
+RUN apt-get update
+RUN apt-get upgrade -y
+
+# nasm for building assembly
+# grub* + xorriso for building the iso
+RUN apt-get install -y nasm xorriso grub-pc-bin grub-common
+
+# where our source will be
+VOLUME /root/env
+WORKDIR /root/env
