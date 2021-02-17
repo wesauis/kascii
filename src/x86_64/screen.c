@@ -1,5 +1,8 @@
 #include "screen.h"
 
+// we are in VGA text mode
+// https://en.wikipedia.org/wiki/VGA_text_mode
+
 const static size_t COLS = 80;
 const static size_t ROWS = 25;
 
