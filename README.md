@@ -58,4 +58,3 @@ qemu-system-x86_64 -cdrom dist/x86_64/kernel.iso
 # windows but qemu cannot find the pc bios (use powershell)
 .\scripts\windows\qemu-x86_64.ps1
 ```
-
