@@ -160,7 +160,7 @@ page_table_l2:
 ; the stack (first in, last out)
 stack_bottom:
   ; reserve 16KiB
-  resb 1024 * 16
+  resb 4096 * 4
 stack_top:
 
 ; readonly data

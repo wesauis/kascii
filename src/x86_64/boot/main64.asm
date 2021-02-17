@@ -1,4 +1,5 @@
 global long_mode_start
+extern kernel_main
 
 section .text
 bits 64 ; finally!
@@ -12,11 +13,8 @@ long_mode_start:
   mov gs, ax
 
   ; 64 bit ftw!
-
-  ; print `OK`
-  ; 0xb8000: video memory adress
-  ; 0x2f4b2f4f: OK with green bg and white fg
-  mov dword [0xb8000], 0x2f4b2f4f 
+  ; hello c
+  call kernel_main
 
   ; sets the cpu to idle state
   ; https://en.wikipedia.org/wiki/HLT_(x86_instruction)
