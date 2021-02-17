@@ -1,8 +1,15 @@
 global long_mode_start
 extern kernel_main
 
+;;
+;; 64 bit code
+;;
+;; here we will do some resets (setting null) and calling our c main
+;; goodby assembly (for now)
+;; hello c
+;;
 section .text
-bits 64 ; finally!
+bits 64
 long_mode_start:
   ; load null into all data segment registers
   mov ax, 0
@@ -12,10 +19,6 @@ long_mode_start:
   mov fs, ax
   mov gs, ax
 
-  ; 64 bit ftw!
-  ; hello c
   call kernel_main
 
-  ; sets the cpu to idle state
-  ; https://en.wikipedia.org/wiki/HLT_(x86_instruction)
   hlt
