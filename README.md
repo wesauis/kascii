@@ -1,6 +1,6 @@
 # kascii
 
-x86_64 kernel from wasm to c
+x86_64 kernel from asm to c
 
 This was made by following a video series by
 [CodePulse](https://www.youtube.com/channel/UCUVahoidFA7F3Asfvamrm7w), the
