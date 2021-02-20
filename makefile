@@ -1,35 +1,46 @@
+# env
+ARCH ?= x86_64
 
-kernel_source_files := $(shell find src/kernel -name *.c)
-kernel_object_files := $(patsubst src/kernel/%.c, build/kernel/%.o, $(kernel_source_files))
+# x86_64 commands
+					LINK_x86_64 = x86_64-elf-ld -n -T targets/x86_64/linker.ld -o
+KERNEL_COMPILE_x86_64 = x86_64-elf-gcc -c -I src/interface -ffreestanding -o $@
+		 C_COMPILE_x86_64 = x86_64-elf-gcc -c -I src/interface -ffreestanding -o $@
+	 ASM_COMPILE_x86_64 = nasm -f elf64 -o $@
+					 ISO_x86_64 = grub-mkrescue /usr/lib/grub/i386-pc targets/x86_64/iso -o
 
-x86_64_c_source_files := $(shell find src/x86_64 -name *.c)
-x86_64_c_object_files := $(patsubst src/x86_64/%.c, build/x86_64/%.o, $(x86_64_c_source_files))
+# kernel
+kernel_src := $(shell find src/kernel -name *.c)
+kernel_obj := $(patsubst src/kernel/%.c, build/kernel/%.o, $(kernel_src))
 
-x86_64_asm_source_files := $(shell find src/x86_64 -name *.asm)
-x86_64_asm_object_files := $(patsubst src/x86_64/%.asm, build/x86_64/%.o, $(x86_64_asm_source_files))
+$(kernel_obj): build/kernel/%.o : src/kernel/%.c
+	@mkdir -p $(dir $@)
+	@$(KERNEL_COMPILE_${ARCH}) $(patsubst build/kernel/%.o, src/kernel/%.c, $@)
 
-x86_64_object_files := $(x86_64_c_object_files) $(x86_64_asm_object_files)
+# C
+c_src := $(shell find src/${ARCH} -name *.c)
+c_obj := $(patsubst src/${ARCH}/%.c, build/${ARCH}/%.o, $(c_src))
 
-# compile kernel c
-# ffreestanding meand no c std lib
-$(kernel_object_files): build/kernel/%.o : src/kernel/%.c
-	mkdir -p $(dir $@) && \
-	x86_64-elf-gcc -c -I src/interface -ffreestanding $(patsubst build/kernel/%.o, src/kernel/%.c, $@) -o $@
+$(c_obj): build/${ARCH}/%.o : src/${ARCH}/%.c
+	@mkdir -p $(dir $@)
+	@$(C_COMPILE_${ARCH}) $(patsubst build/${ARCH}/%.o, src/${ARCH}/%.c, $@)
 
-# compile c
-$(x86_64_c_object_files): build/x86_64/%.o : src/x86_64/%.c
-	mkdir -p $(dir $@) && \
-	x86_64-elf-gcc -c -I src/interface -ffreestanding $(patsubst build/x86_64/%.o, src/x86_64/%.c, $@) -o $@
+# assembly
+asm_src := $(shell find src/${ARCH} -name *.asm)
+asm_obj := $(patsubst src/${ARCH}/%.asm, build/${ARCH}/%.o, $(asm_src))
 
-# compile asm
-$(x86_64_asm_object_files): build/x86_64/%.o : src/x86_64/%.asm
-	mkdir -p $(dir $@) && \
-	nasm -f elf64 $(patsubst build/x86_64/%.o, src/x86_64/%.asm, $@) -o $@
+$(asm_obj): build/${ARCH}/%.o : src/${ARCH}/%.asm
+	@mkdir -p $(dir $@)
+	@$(ASM_COMPILE_${ARCH}) $(patsubst build/${ARCH}/%.o, src/${ARCH}/%.asm, $@)
 
-.PHONY: build-x86_64
-# build only if any of the object files has changed
-build-x86_64: $(kernel_object_files) $(x86_64_object_files)
-	mkdir -p dist/x86_64 && \
-	x86_64-elf-ld -n -o dist/x86_64/kernel.bin -T targets/x86_64/linker.ld $(kernel_object_files) $(x86_64_object_files) && \
-	cp dist/x86_64/kernel.bin targets/x86_64/iso/boot/kernel.bin && \
-	grub-mkrescue /usr/lib/grub/i386-pc -o dist/x86_64/kernel.iso targets/x86_64/iso
+
+.PHONY: build clean
+
+build: $(kernel_obj) $(c_obj) $(asm_obj)
+	@mkdir -p dist/${ARCH}
+	@$(LINK_${ARCH}) dist/${ARCH}/kascii-${ARCH}.bin $(kernel_obj) $(c_obj) $(asm_obj)
+	@cp dist/${ARCH}/kascii-${ARCH}.bin targets/${ARCH}/iso/boot/kernel.bin
+	@$(ISO_${ARCH}) dist/${ARCH}/kascii-${ARCH}.iso
+
+clean:
+	@rm -r build dist || :
+	@rm targets/${ARCH}/iso/boot/kernel.bin || :

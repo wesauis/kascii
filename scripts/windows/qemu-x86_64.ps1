@@ -5,7 +5,7 @@ $pwd = ${pwd}
 cd 'C:/Program Files/qemu'
 
 # run with qemu
-qemu-system-x86_64 -cdrom "${pwd}/dist/x86_64/kernel.iso"
+qemu-system-x86_64 -cdrom "${pwd}/dist/x86_64/kascii-x86_64.iso"
 
 # return
 cd $pwd
