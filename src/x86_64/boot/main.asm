@@ -28,7 +28,7 @@ start:
   jmp gdt64.code_segment_offset:long_mode_start ; load code segment into the code selector
   hlt
 
-;; 
+;;
 ;; check if was loaded using multiboot2
 ;;
 ;; https://www.gnu.org/software/grub/manual/multiboot2/html_node/Machine-state.html
@@ -41,9 +41,9 @@ check_multiboot2:
   mov al, "M"
   jmp error
 
-;; 
+;;
 ;; check if cpuid is avaliable
-;; 
+;;
 ;; for it we will flip a bit on the flags register
 ;; if the cpu allows this action cpuid is avaliable
 ;; before exiting we will undo the changes to the flags
@@ -60,7 +60,7 @@ check_cpuid:
 
   ; reset changes to the flags
   push ecx
-  popfd 
+  popfd
 
   ; compare the updated against the original flags
   ; if equal cpuid is not avaliable
@@ -72,7 +72,7 @@ check_cpuid:
   mov al, "C"
   jmp error
 
-;; 
+;;
 ;; check if long mode is avaliable
 ;;
 ;; 64 bit long mode is our target
@@ -118,7 +118,7 @@ error:
   mov byte [0x800a], al          ; error letter
   hlt                            ; enter idle mode (stops)
 
-;; 
+;;
 ;; setup paging so we can enter 64 bit long mode
 ;;
 ;; we will identity map the first GB
@@ -133,9 +133,9 @@ error:
 ;;
 ;; present flag, first bit
 ;;   Indicates whether the page or page table being pointed to by the entry is
-;;   currently loaded in physical memory. When the flag is set, the page is in 
-;;   physical memory and address translation is carried out. When the flag is 
-;;   clear, the page is not in memory and, if the processor attempts to access 
+;;   currently loaded in physical memory. When the flag is set, the page is in
+;;   physical memory and address translation is carried out. When the flag is
+;;   clear, the page is not in memory and, if the processor attempts to access
 ;;   the page, it generates a page-fault exception
 ;;
 ;; r/w (redable/writable) flag, second bit
@@ -144,8 +144,8 @@ error:
 ;;   page is read only; when the flag is set, the page can be read and written into.
 ;;
 ;; huge page (Page size (PS)) flag, bit 7
-;;   this will allow for the l2 table to point directly to the physical memory 
-;;   the spere 9 bits will act as a offset into the huge page, rather that as 
+;;   this will allow for the l2 table to point directly to the physical memory
+;;   the spere 9 bits will act as a offset into the huge page, rather that as
 ;;   an index on the l1, this will remove the need for l1 page and will make our
 ;;   life easyer
 ;;
@@ -168,7 +168,7 @@ setup_page_tables:
   mul ecx                             ; eax * ecx == addr of the next page
   or eax, 0b10000011                  ; present, r/w and huge page
   mov [page_table_l2 + ecx * 8], eax  ; save the data into the right index
-  
+
   inc ecx         ; increment counter ; i++
   cmp ecx, 512    ; checks if the whole table is mapped
   jne .loop       ; if not -> repeat
@@ -199,7 +199,7 @@ enable_paging:
   or eax, 1 << 8       ; enable long mode
   wrmsr                ; write module specific registers
 
-  ; enable paging 
+  ; enable paging
   mov eax, cr0
   or eax, 1 << 31
   mov cr0, eax
@@ -233,11 +233,11 @@ section .rodata
 gdt64:
   dq 0
 .code_segment_offset: equ $ - gdt64
-  ;  excecutable 
-  ;  |           descriptor type 1 for code and data segments 
-  ;  |           |           present flag 
+  ;  excecutable
+  ;  |           descriptor type 1 for code and data segments
+  ;  |           |           present flag
   ;  |           |           |           64 bit flag
-  dq (1 << 43) | (1 << 44) | (1 << 47) | (1 << 53) 
+  dq (1 << 43) | (1 << 44) | (1 << 47) | (1 << 53)
 .pointer:
   ; longer pointer that also holds two bytes for the lenght of the table
   dw $ - gdt64 - 1 ; length - 1: $(start) - gdt64(end)

@@ -5,12 +5,12 @@ void kernel_main() {
   set_color(COLOR_WHITE, COLOR_BLACK);
   rect(0, 0, WIDTH, HEIGHT, ' ');
 
-  size_t x = (WIDTH - 38) / 2;
-  size_t y = (HEIGHT - 7) / 2;
+  size_t x = 21;
+  size_t y = 9;
 
   set_color(COLOR_CYAN, COLOR_BLACK);
   write_str(x, y - 1, "welcome to");
-  
+
   set_color(COLOR_BLACK, COLOR_YELLOW);
   char kascii[5][37] = {
     "#  ##   #    ####   ####   #### #####",

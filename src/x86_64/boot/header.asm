@@ -1,4 +1,4 @@
-;; 
+;;
 ;; multiboot2 header following the especification
 ;;
 ;; https://www.gnu.org/software/grub/manual/multiboot2/multiboot.html#Header-magic-fields
@@ -10,7 +10,7 @@ header_start:
   dd header_end - header_start ; header_lenght
 
   ; checksum
-  dd 0x100000000 - (0xE85250D6 + 0 + header_end - header_start) 
+  dd 0x100000000 - (0xE85250D6 + 0 + header_end - header_start)
 
   ; end tag
   dw 0

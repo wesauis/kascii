@@ -27,13 +27,13 @@ docker build buildenv --tag kascii-env
 ## Entering on the Build Environment
 
 ```sh
-# Linux or MacOS: 
+# Linux or MacOS:
 docker run --rm -it -v "$pwd":/root/env kascii-env
 
-# Windows (CMD): 
+# Windows (CMD):
 docker run --rm -it -v "%cd%":/root/env kascii-env
 
-# Windows (PowerShell): 
+# Windows (PowerShell):
 docker run --rm -it -v "${pwd}:/root/env" kascii-env
 
 # --rm: remove container on exit

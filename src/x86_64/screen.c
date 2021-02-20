@@ -25,9 +25,9 @@ size_t __index(size_t x, size_t y) {
 
 void rect(size_t x0, size_t y0, size_t x1, size_t y1, char chr) {
   size_t xs, xi, xe, ys, yi, ye;
-  if (x0 < x1) {    xs =  1;    xi = x0;    xe = x1; } 
+  if (x0 < x1) {    xs =  1;    xi = x0;    xe = x1; }
   else {            xs = -1;    xi = x1;    xe = x0; }
-  if (y0 < y1) {    ys =  1;    yi = y0;    ye = y1; } 
+  if (y0 < y1) {    ys =  1;    yi = y0;    ye = y1; }
   else {            ys = -1;    yi = y1;    ye = y0; }
 
   for (size_t x = xi; x < xe; x += xs) {
@@ -39,9 +39,9 @@ void rect(size_t x0, size_t y0, size_t x1, size_t y1, char chr) {
 
 void border(size_t x0, size_t y0, size_t x1, size_t y1, char chr) {
   size_t xs, xi, xe, ys, yi, ye;
-  if (x0 < x1) {    xs =  1;    xi = x0;    xe = x1; } 
+  if (x0 < x1) {    xs =  1;    xi = x0;    xe = x1; }
   else {            xs = -1;    xi = x1;    xe = x0; }
-  if (y0 < y1) {    ys =  1;    yi = y0;    ye = y1; } 
+  if (y0 < y1) {    ys =  1;    yi = y0;    ye = y1; }
   else {            ys = -1;    yi = y1;    ye = y0; }
 
   for (size_t x = xi; x <= xe; x += xs) {
